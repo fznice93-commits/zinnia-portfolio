@@ -75,15 +75,26 @@ document.querySelectorAll("section[id]").forEach((section) => sectionObserver.ob
 const menuToggle = document.querySelector("[data-menu-toggle]");
 const siteNav = document.querySelector("[data-site-nav]");
 
-menuToggle.addEventListener("click", () => {
-  const isOpen = siteNav.classList.toggle("is-open");
+function setMenuOpen(isOpen) {
+  siteNav.classList.toggle("is-open", isOpen);
+  document.body.classList.toggle("is-menu-open", isOpen);
   menuToggle.setAttribute("aria-expanded", String(isOpen));
+}
+
+menuToggle.addEventListener("click", () => {
+  setMenuOpen(!siteNav.classList.contains("is-open"));
 });
 
 siteNav.addEventListener("click", (event) => {
   if (!event.target.matches("a")) return;
-  siteNav.classList.remove("is-open");
-  menuToggle.setAttribute("aria-expanded", "false");
+  setMenuOpen(false);
+});
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && siteNav.classList.contains("is-open")) {
+    setMenuOpen(false);
+    menuToggle.focus();
+  }
 });
 
 const hoverPreview = document.querySelector("[data-hover-preview]");
